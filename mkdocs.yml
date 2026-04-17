@@ -1,0 +1,41 @@
+site_name: AI Data Assistant — Architecture
+site_description: Architecture planner and SDD for the plug-and-play BI chatbot widget
+site_author: AI Data Assistant Team
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: indigo
+    accent: cyan
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.follow
+
+nav:
+  - Home: index.md
+  - Architecture:
+    - Overview (5 Layers): architecture/overview.md
+    - GCP Reference: architecture/gcp-reference.md
+    - Application Services: architecture/application-services.md
+    - Storage & Governance: architecture/storage-governance.md
+  - Technical Specs:
+    - Integration & Runtime: specs/technical.md
+    - Security: specs/security.md
+    - Observability: specs/observability.md
+  - Planning:
+    - Design Decisions: planning/design-decisions.md
+    - Implementation Roadmap: planning/roadmap.md
+
+markdown_extensions:
+  - tables
+  - fenced_code
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
