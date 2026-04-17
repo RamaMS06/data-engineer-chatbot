@@ -29,6 +29,7 @@ nav:
   - Planning:
     - Design Decisions: planning/design-decisions.md
     - Implementation Roadmap: planning/roadmap.md
+    - Product References: references.md
 
 markdown_extensions:
   - tables
