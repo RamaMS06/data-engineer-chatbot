@@ -17,6 +17,7 @@ theme:
 
 nav:
   - Home: index.md
+  - "🗂 Implementation Playbook": implementation-book.md
   - Architecture:
     - Overview (5 Layers): architecture/overview.md
     - GCP Reference: architecture/gcp-reference.md
