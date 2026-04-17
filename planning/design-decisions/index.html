@@ -1,0 +1,1342 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Architecture planner and SDD for the plug-and-play BI chatbot widget">
+      
+      
+        <meta name="author" content="AI Data Assistant Team">
+      
+      
+      
+        <link rel="prev" href="../../specs/observability/">
+      
+      
+        <link rel="next" href="../roadmap/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Design Decisions - AI Data Assistant — Architecture</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#key-design-decisions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI Data Assistant — Architecture" class="md-header__button md-logo" aria-label="AI Data Assistant — Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Data Assistant — Architecture
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design Decisions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../implementation-book/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  🗂 Implementation Playbook
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/overview/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../specs/technical/" class="md-tabs__link">
+          
+  
+  
+  Technical Specs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Planning
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Data Assistant — Architecture" class="md-nav__button md-logo" aria-label="AI Data Assistant — Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI Data Assistant — Architecture
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../implementation-book/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗂 Implementation Playbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview (5 Layers)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/gcp-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GCP Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/application-services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/storage-governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage & Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Specs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Technical Specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Runtime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Decisions
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Decisions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dec-001-serverless-first-cloud-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-001 — Serverless-first (Cloud Run)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-002-shadow-dom-isolation-for-widget-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-002 — Shadow DOM Isolation for Widget UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-003-schema-registry-as-nl2sql-context-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-003 — Schema Registry as NL2SQL Context Source
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-004-redis-cache-in-front-of-bigquery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-004 — Redis Cache in Front of BigQuery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-005-query-validator-is-non-negotiable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-005 — Query Validator is Non-Negotiable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-006-dual-rag-nl2sql-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-006 — Dual RAG + NL2SQL Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-007-multi-tenant-via-bigquery-dataset-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-007 — Multi-tenant via BigQuery Dataset Isolation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product References
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dec-001-serverless-first-cloud-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-001 — Serverless-first (Cloud Run)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-002-shadow-dom-isolation-for-widget-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-002 — Shadow DOM Isolation for Widget UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-003-schema-registry-as-nl2sql-context-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-003 — Schema Registry as NL2SQL Context Source
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-004-redis-cache-in-front-of-bigquery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-004 — Redis Cache in Front of BigQuery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-005-query-validator-is-non-negotiable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-005 — Query Validator is Non-Negotiable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-006-dual-rag-nl2sql-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-006 — Dual RAG + NL2SQL Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dec-007-multi-tenant-via-bigquery-dataset-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEC-007 — Multi-tenant via BigQuery Dataset Isolation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="key-design-decisions">Key Design Decisions</h1>
+<p>Each decision is recorded with its ID, the context that forced the choice, alternatives that were considered, and the rationale for the final call.</p>
+<hr />
+<h2 id="dec-001-serverless-first-cloud-run">DEC-001 — Serverless-first (Cloud Run)</h2>
+<p><strong>Decision:</strong> All backend services run on Cloud Run with scale-to-zero enabled.</p>
+<p><strong>Context:</strong> The widget is embedded on client websites with unpredictable traffic patterns — a client may have zero usage for days then spike during a marketing campaign. Traditional always-on VMs or Kubernetes clusters charge for idle capacity.</p>
+<p><strong>Alternatives considered:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Rejected because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GKE (Kubernetes)</td>
+<td>Minimum node cost ~$150/month even at zero load</td>
+</tr>
+<tr>
+<td>Cloud Functions</td>
+<td>9-minute timeout is insufficient for long LLM chains</td>
+</tr>
+<tr>
+<td>VM (Compute Engine)</td>
+<td>Fixed cost, manual scaling, operational overhead</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rationale:</strong> Cloud Run matches cost exactly to usage. Auto-sleep after 20 minutes idle = $0 when no widget is active. Cold start &lt; 2 seconds is acceptable for first-message latency on an infrequently-used widget.</p>
+<p><strong>Trade-off:</strong> Cold starts on first request after idle period. Mitigated by container pre-warming (Cloud Run min-instances = 1 for high-tier tenants).</p>
+<hr />
+<h2 id="dec-002-shadow-dom-isolation-for-widget-ui">DEC-002 — Shadow DOM Isolation for Widget UI</h2>
+<p><strong>Decision:</strong> The chat widget UI runs inside a Shadow DOM attached to an <code>&lt;iframe&gt;</code>, not injected directly into the host page's DOM.</p>
+<p><strong>Context:</strong> The widget is embedded in arbitrary third-party web applications with widely varying CSS frameworks (Bootstrap, Tailwind, custom CSS). Without isolation, the host app's styles break the widget, or the widget's styles leak into the host app.</p>
+<p><strong>Alternatives considered:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Rejected because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct DOM injection</td>
+<td>Host CSS conflicts are undebuggable and unpredictable</td>
+</tr>
+<tr>
+<td>CSS-in-JS with scoped classnames</td>
+<td>Still vulnerable to global resets and <code>!important</code> rules</td>
+</tr>
+<tr>
+<td>Custom Elements without Shadow DOM</td>
+<td>Partial isolation only</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rationale:</strong> Shadow DOM + iframe provides the strongest isolation boundary available in the browser. The widget looks and behaves identically regardless of the host application. <em>Adopted directly from <a href="../../references/#ref-002">REF-002 Chatbase</a>.</em></p>
+<p><strong>Trade-off:</strong> Cross-origin iframe communication requires PostMessage API — slightly more complex than direct DOM access, but well understood and secure.</p>
+<hr />
+<h2 id="dec-003-schema-registry-as-nl2sql-context-source">DEC-003 — Schema Registry as NL2SQL Context Source</h2>
+<p><strong>Decision:</strong> The NL2SQL Engine always reads schema metadata from the Schema Registry (Dataplex cache), never by probing the live database directly.</p>
+<p><strong>Context:</strong> To generate accurate SQL, the LLM needs table names, column names, types, and descriptions. The naive approach is to run <code>INFORMATION_SCHEMA</code> queries against BigQuery on each request.</p>
+<p><strong>Alternatives considered:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Rejected because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Live INFORMATION_SCHEMA query per request</td>
+<td>+200–500ms latency, uses BigQuery compute quota</td>
+</tr>
+<tr>
+<td>Hardcode schema in prompts</td>
+<td>Breaks every time the client adds a table or column</td>
+</tr>
+<tr>
+<td>Ask client to provide schema via API</td>
+<td>Operational burden on the client</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rationale:</strong> Dataplex stores metadata with richer context than <code>INFORMATION_SCHEMA</code> — column descriptions in business language, foreign key hints, sample enum values. The AI generates better SQL from business descriptions ("customer lifetime value in USD") than raw column names ("clv_usd"). Schema refreshes daily with a manual override. <em>Aligns with <a href="../../references/#ref-001">REF-001 Vanna.ai</a> training data approach.</em></p>
+<p><strong>Trade-off:</strong> Schema cache can be stale up to 24 hours. Mitigated by on-demand refresh via admin API.</p>
+<hr />
+<h2 id="dec-004-redis-cache-in-front-of-bigquery">DEC-004 — Redis Cache in Front of BigQuery</h2>
+<p><strong>Decision:</strong> A Redis semantic cache sits in front of all BigQuery queries, keyed by a hash of the question + tenant ID.</p>
+<p><strong>Context:</strong> The same business question gets asked repeatedly with different phrasing. "Show me last month's revenue" and "What was total revenue in March?" are semantically identical but generate different SQL — BigQuery's native 24hr cache won't match them.</p>
+<p><strong>Alternatives considered:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Rejected because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BigQuery native cache only</td>
+<td>Only matches byte-identical SQL strings</td>
+</tr>
+<tr>
+<td>No cache</td>
+<td>Every question calls LLM + hits BigQuery — high latency and cost</td>
+</tr>
+<tr>
+<td>DynamoDB TTL</td>
+<td>Additional non-GCP dependency; Redis has richer data structures</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rationale:</strong> Keying the cache on the question's semantic hash (embedding similarity threshold &gt; 0.95) catches paraphrased repeats. Cache hit = &lt; 50ms response, zero LLM cost, zero BigQuery scan cost. At scale, expected cache hit rate &gt; 40% for typical business users who ask similar questions.</p>
+<p><strong>Trade-off:</strong> The semantic hash approach can produce false positives for near-identical questions with different intent. Configurable similarity threshold allows tuning precision vs. recall.</p>
+<hr />
+<h2 id="dec-005-query-validator-is-non-negotiable">DEC-005 — Query Validator is Non-Negotiable</h2>
+<p><strong>Decision:</strong> Every LLM-generated SQL statement must pass the Query Validator before execution. No bypass path exists.</p>
+<p><strong>Context:</strong> BigQuery charges per bytes scanned. A <code>SELECT *</code> on a 1 TB table costs ~$5.00 per query. A malicious or confused user could ask a question that generates a runaway query and exhaust a tenant's monthly budget in minutes.</p>
+<p><strong>Alternatives considered:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Rejected because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trust LLM output directly</td>
+<td>LLMs hallucinate and make mistakes; cost risk is unacceptable</td>
+</tr>
+<tr>
+<td>Post-execution cost check</td>
+<td>Too late — charge already incurred</td>
+</tr>
+<tr>
+<td>BigQuery slot reservations</td>
+<td>Caps execution speed but not scan cost</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rationale:</strong> The validator is a cheap, deterministic check (regex + AST parse) that runs in &lt; 5ms. It blocks: <code>SELECT *</code>, DDL/DML statements, cross-tenant table references, queries estimated to scan &gt; 10 GB (configurable per tier). Blocked queries are returned to the NL2SQL Engine for retry with the specific violation as feedback. <em>This decision has zero exceptions.</em></p>
+<p><strong>Trade-off:</strong> Some legitimate complex queries may be blocked by the scan size limit. Tenant admins can adjust the threshold per their cost tolerance.</p>
+<hr />
+<h2 id="dec-006-dual-rag-nl2sql-routing">DEC-006 — Dual RAG + NL2SQL Routing</h2>
+<p><strong>Decision:</strong> The Agent Orchestrator routes each question to either the NL2SQL pipeline or the RAG retriever — not both — based on intent classification.</p>
+<p><strong>Context:</strong> Users ask two fundamentally different types of questions:
+1. "What were total sales last quarter?" → needs live database data → NL2SQL
+2. "What does churn rate mean?" → needs business knowledge → RAG</p>
+<p><strong>Alternatives considered:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Rejected because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Always NL2SQL</td>
+<td>Can't answer knowledge questions from SQL; confusing errors</td>
+</tr>
+<tr>
+<td>Always RAG</td>
+<td>Can't return live data; answers are always from static documents</td>
+</tr>
+<tr>
+<td>Always both paths</td>
+<td>2x LLM calls and latency for every question</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rationale:</strong> A fast LLM intent classifier (&lt; 200ms) routes to the appropriate path. The classifier uses a small, cheap model (not the full reasoning model) to minimise overhead. Ambiguous questions fall back to NL2SQL as the primary capability. <em><a href="../../references/#ref-003">REF-003 Quivr</a> provides the RAG path defaults; <a href="../../references/#ref-001">REF-001 Vanna.ai</a> provides the NL2SQL path defaults.</em></p>
+<p><strong>Trade-off:</strong> Misclassification sends a data question to RAG (useless answer) or a knowledge question to NL2SQL (SQL error). Classifier accuracy is monitored and retrainable. Fallback: if NL2SQL fails after 3 retries, the Orchestrator escalates to RAG automatically.</p>
+<hr />
+<h2 id="dec-007-multi-tenant-via-bigquery-dataset-isolation">DEC-007 — Multi-tenant via BigQuery Dataset Isolation</h2>
+<p><strong>Decision:</strong> Each client tenant gets a dedicated BigQuery Dataset with Row Level Security as a second enforcement layer.</p>
+<p><strong>Context:</strong> Multiple clients' data lives in the same GCP project. A misconfigured query or application bug must not allow one tenant to read another's data.</p>
+<p><strong>Alternatives considered:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Rejected because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single shared dataset, filter by tenant_id column</td>
+<td>Single bug in query generation exposes all tenants</td>
+</tr>
+<tr>
+<td>Separate GCP project per tenant</td>
+<td>Operational overhead scales linearly with tenant count</td>
+</tr>
+<tr>
+<td>Database-level encryption only</td>
+<td>Encryption doesn't prevent authorised app bugs from cross-reading</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rationale:</strong> Dataset-level isolation means the service account for Tenant A literally cannot read Tenant B's Dataset — it's a GCP IAM boundary, not just an application-level filter. Row Level Security adds a second enforcement layer within the same Dataset for cases where tenants share a Dataset (cost optimisation for small tenants). Defense in depth: both layers must fail for cross-tenant data exposure.</p>
+<p><strong>Trade-off:</strong> Dataset-per-tenant adds management complexity when onboarding a new client. Mitigated by a tenant provisioning script that creates the Dataset, grants IAM, and registers the schema in Dataplex automatically.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

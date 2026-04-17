@@ -1,0 +1,1382 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Architecture planner and SDD for the plug-and-play BI chatbot widget">
+      
+      
+        <meta name="author" content="AI Data Assistant Team">
+      
+      
+      
+        <link rel="prev" href="../design-decisions/">
+      
+      
+        <link rel="next" href="../../references/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Implementation Roadmap - AI Data Assistant — Architecture</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#implementation-roadmap" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI Data Assistant — Architecture" class="md-header__button md-logo" aria-label="AI Data Assistant — Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Data Assistant — Architecture
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Implementation Roadmap
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../implementation-book/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  🗂 Implementation Playbook
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/overview/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../specs/technical/" class="md-tabs__link">
+          
+  
+  
+  Technical Specs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../design-decisions/" class="md-tabs__link">
+          
+  
+  
+  Planning
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Data Assistant — Architecture" class="md-nav__button md-logo" aria-label="AI Data Assistant — Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI Data Assistant — Architecture
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../implementation-book/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗂 Implementation Playbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview (5 Layers)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/gcp-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GCP Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/application-services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/storage-governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage & Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Specs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Technical Specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Runtime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Decisions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-001-widget-loader-js" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-001 — Widget Loader JS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-002-api-server-fastapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-002 — API Server (FastAPI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-003-auth-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-003 — Auth Middleware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-004-schema-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-004 — Schema Registry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-005-nl2sql-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-005 — NL2SQL Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-006-bigquery-connector-query-validator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-006 — BigQuery Connector + Query Validator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-007-response-formatter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-007 — Response Formatter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-008-session-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-008 — Session Manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-009-rag-retriever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-009 — RAG Retriever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-010-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-010 — Observability
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product References
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-001-widget-loader-js" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-001 — Widget Loader JS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-002-api-server-fastapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-002 — API Server (FastAPI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-003-auth-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-003 — Auth Middleware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-004-schema-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-004 — Schema Registry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-005-nl2sql-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-005 — NL2SQL Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-006-bigquery-connector-query-validator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-006 — BigQuery Connector + Query Validator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-007-response-formatter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-007 — Response Formatter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-008-session-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-008 — Session Manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-009-rag-retriever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-009 — RAG Retriever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tsk-010-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSK-010 — Observability
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="implementation-roadmap">Implementation Roadmap</h1>
+<p>Ten tasks in recommended build order. Each task lists its ID, what it requires as input, what it delivers as output, and the acceptance criteria that define "done".</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> TSK-001 ──► TSK-002 ──► TSK-003 ──► TSK-004 ──► TSK-005
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                                                      │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a> TSK-010 ◄── TSK-009 ◄── TSK-008 ◄── TSK-007 ◄── TSK-006
+</code></pre></div>
+<hr />
+<h2 id="tsk-001-widget-loader-js">TSK-001 — Widget Loader JS</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> The <code>&lt;script&gt;</code> tag bootstrap. A tiny JS file (&lt; 5 KB, minified) that reads <code>data-*</code> attributes, injects a trigger button into the host page, and lazy-loads the chat iframe on first click.</p>
+<p><strong>Inputs required:</strong> None — this is the entry point.</p>
+<p><strong>Outputs delivered:</strong>
+- <code>widget.js</code> — the loader script
+- Iframe spawned pointing to the Widget UI service
+- PostMessage channel established between host page and iframe</p>
+<p><strong>Acceptance criteria:</strong>
+- Adding <code>&lt;script src="widget.js" data-tenant-id="test"&gt;</code> to a blank HTML page shows a chat button
+- Clicking the button opens the iframe widget
+- No CSS leaks from the widget into the host page
+- Script weight &lt; 5 KB gzipped</p>
+<p><strong>Reference:</strong> <a href="../../references/#ref-002">REF-002 Chatbase</a> embed pattern · <a href="../../architecture/overview/#layer-1--client-embed">ARC-L1-001</a></p>
+<hr />
+<h2 id="tsk-002-api-server-fastapi">TSK-002 — API Server (FastAPI)</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> The core backend service. A FastAPI (Python) application deployed on Cloud Run with a health check endpoint and the skeleton of the <code>/v1/chat</code> endpoint.</p>
+<p><strong>Inputs required:</strong> TSK-001 (widget needs an endpoint to call)</p>
+<p><strong>Outputs delivered:</strong>
+- <code>POST /v1/chat</code> — accepts <code>{message, tenant_id, session_id}</code>, returns <code>200 OK</code> with placeholder response
+- <code>GET /v1/health</code> — returns <code>{"status": "ok"}</code> for Cloud Run health checks
+- Dockerfile + Cloud Run deployment config
+- GitHub Actions CI/CD deploy workflow</p>
+<p><strong>Acceptance criteria:</strong>
+- <code>curl /v1/health</code> returns 200 on Cloud Run
+- Cold start time &lt; 2 seconds measured from Cloud Run metrics
+- Widget can call <code>/v1/chat</code> and receive a response (even if placeholder)</p>
+<p><strong>Reference:</strong> <a href="../../architecture/application-services/#arc-l2-004--api-server-fastapi">ARC-L2-004</a></p>
+<hr />
+<h2 id="tsk-003-auth-middleware">TSK-003 — Auth Middleware</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> Tenant-key validation and JWT issuance. Every request to <code>/v1/chat</code> must carry a valid JWT. The widget exchanges the <code>tenant-key</code> (from the <code>data-tenant-id</code> attribute) for a short-lived JWT on widget init.</p>
+<p><strong>Inputs required:</strong> TSK-002 (runs as middleware on the API server)</p>
+<p><strong>Outputs delivered:</strong>
+- <code>POST /v1/auth/token</code> — validates tenant-key, returns JWT (15-min TTL)
+- JWT validation middleware on all <code>/v1/</code> routes
+- Tenant key store (Cloud SQL table: <code>tenants</code>)</p>
+<p><strong>Acceptance criteria:</strong>
+- A valid tenant-key returns a signed JWT
+- An invalid key returns <code>401 Unauthorized</code>
+- A request to <code>/v1/chat</code> without a JWT returns <code>401</code>
+- JWT expiry is enforced — expired token returns <code>401</code></p>
+<p><strong>Reference:</strong> <a href="../../architecture/overview/#layer-2--api-gateway--auth">ARC-L2-002</a> · <a href="../../specs/security/#spc-s-001--jwt-per-request-auth">SPC-S-001</a></p>
+<hr />
+<h2 id="tsk-004-schema-registry">TSK-004 — Schema Registry</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> The metadata store that tells the NL2SQL Engine what tables and columns exist for each tenant. Backed by Dataplex on GCP for production; a simple JSON file store for local dev.</p>
+<p><strong>Inputs required:</strong> TSK-003 (schema API must be authenticated)</p>
+<p><strong>Outputs delivered:</strong>
+- <code>GET /v1/schema</code> — returns schema metadata for the authenticated tenant
+- Schema loader script that introspects BigQuery and registers metadata in Dataplex
+- Admin endpoint <code>POST /v1/schema/refresh</code> — triggers manual schema refresh
+- Redis cache layer for schema reads (TTL 1 hour)</p>
+<p><strong>Acceptance criteria:</strong>
+- Schema for a tenant returns correct table/column names after running the loader
+- Schema read latency &lt; 50ms (from Redis cache)
+- <code>POST /v1/schema/refresh</code> updates the cache within 5 seconds</p>
+<p><strong>Reference:</strong> <a href="../../architecture/storage-governance/#arc-l4-002a--dataplex--schema-registry">ARC-L4-002a</a> · <a href="../design-decisions/#dec-003">DEC-003</a></p>
+<hr />
+<h2 id="tsk-005-nl2sql-pipeline">TSK-005 — NL2SQL Pipeline</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> The core AI feature. Receives a natural language question, fetches schema, generates SQL via LLM, validates it, and returns the SQL ready for execution.</p>
+<p><strong>Inputs required:</strong> TSK-004 (needs schema), TSK-003 (needs tenant context)</p>
+<p><strong>Outputs delivered:</strong>
+- <code>NL2SQLEngine</code> class with <code>generate(question, tenant_id) → sql</code> method
+- LLM integration (Vertex AI Gemini primary)
+- Few-shot prompt template with schema injection
+- Auto-retry loop (up to 3 attempts on validation failure)
+- Integration with Query Validator (TSK-006 dependency — stub for now)</p>
+<p><strong>Acceptance criteria:</strong>
+- "Show me total sales by month" generates valid BigQuery SQL for a known schema
+- Invalid SQL triggers retry; correct SQL produced within 3 attempts for &gt; 90% of test cases
+- Schema context is always included in the prompt (verified via logging)
+- LLM call latency logged per request</p>
+<p><strong>Reference:</strong> <a href="../../references/#ref-001">REF-001 Vanna.ai</a> · <a href="../../architecture/application-services/#arc-l3-002--nl2sql-pipeline">ARC-L3-002</a></p>
+<hr />
+<h2 id="tsk-006-bigquery-connector-query-validator">TSK-006 — BigQuery Connector + Query Validator</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> Two components built together. The Query Validator checks safety before execution; the BigQuery Connector executes the validated SQL and returns results.</p>
+<p><strong>Inputs required:</strong> TSK-005 (NL2SQL produces SQL to validate and execute)</p>
+<p><strong>Outputs delivered:</strong>
+- <code>QueryValidator</code> class — blocks SELECT *, DDL/DML, cross-tenant refs, &gt; 10 GB scans
+- <code>BigQueryConnector</code> class — executes SQL, returns <code>{columns, rows, bytes_scanned}</code>
+- Error feedback format for NL2SQL retry loop
+- Query execution logged with bytes scanned and cost estimate</p>
+<p><strong>Acceptance criteria:</strong>
+- <code>SELECT * FROM orders</code> is blocked by the validator
+- <code>DROP TABLE orders</code> is blocked
+- A valid column-specific query executes and returns correct rows
+- Bytes scanned and estimated cost logged for every query</p>
+<p><strong>Reference:</strong> <a href="../../architecture/overview/#layer-3--ai-core-engine">ARC-L3-003</a> · <a href="../design-decisions/#dec-005">DEC-005</a></p>
+<hr />
+<h2 id="tsk-007-response-formatter">TSK-007 — Response Formatter</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> Converts raw query results or RAG text into structured output that the widget's Result Renderer can display.</p>
+<p><strong>Inputs required:</strong> TSK-006 (raw BigQuery results), TSK-009 (raw RAG text, partial dependency)</p>
+<p><strong>Outputs delivered:</strong>
+- <code>ResponseFormatter</code> class with <code>format(results, question) → {type, payload}</code> method
+- Format types: <code>narrative</code>, <code>table</code>, <code>chart</code>, <code>csv_link</code>
+- LLM-based format selector (fast model classifies question type to pick format)
+- Chart.js config generator for trend/comparison data</p>
+<p><strong>Acceptance criteria:</strong>
+- "What were total sales last month?" → narrative format
+- "Show me all orders from March" (&lt; 50 rows) → table format
+- "Show me revenue by month for the last year" → chart format (line chart)
+- "Export all customer records" (&gt; 100 rows) → CSV download link</p>
+<p><strong>Reference:</strong> <a href="../../architecture/overview/#layer-3--ai-core-engine">ARC-L3-004</a></p>
+<hr />
+<h2 id="tsk-008-session-manager">TSK-008 — Session Manager</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> Multi-turn conversation context. Each chat session retains the last 10 message turns so the user can ask follow-up questions ("break that down by region" after a revenue question).</p>
+<p><strong>Inputs required:</strong> TSK-002 (API server must exist), Redis Memorystore must be provisioned</p>
+<p><strong>Outputs delivered:</strong>
+- <code>SessionManager</code> class — <code>create()</code>, <code>get(session_id)</code>, <code>append(session_id, message)</code>, <code>expire(session_id)</code>
+- Redis connection pool in FastAPI app
+- Session ID generated on widget init, passed in every <code>/v1/chat</code> request
+- Session context injected into Orchestrator prompt for follow-up resolution</p>
+<p><strong>Acceptance criteria:</strong>
+- Follow-up question "break that down by region" after a revenue question generates correct SQL referencing the previous query's context
+- Session expires after 30 minutes of inactivity (verified by TTL)
+- New session created automatically after expiry</p>
+<p><strong>Reference:</strong> <a href="../../architecture/application-services/#arc-l2-005--session-manager">ARC-L2-005</a> · <a href="../../architecture/storage-governance/#arc-l4-003--redis-memorystore-cache">ARC-L4-003</a></p>
+<hr />
+<h2 id="tsk-009-rag-retriever">TSK-009 — RAG Retriever</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> The knowledge base path for non-analytical questions. Clients upload documents (PDFs, CSVs, Markdown); these are chunked, embedded, and stored in Pgvector. Questions classified as "knowledge" by the Orchestrator are answered via top-K retrieval.</p>
+<p><strong>Inputs required:</strong> TSK-003 (auth), Cloud SQL + Pgvector provisioned</p>
+<p><strong>Outputs delivered:</strong>
+- Document ingestion pipeline: upload → chunk → embed → store in Pgvector
+- <code>RAGRetriever</code> class — <code>retrieve(question, tenant_id) → [chunks]</code> method
+- Synthesis prompt: LLM generates answer grounded in retrieved chunks with citations
+- <code>POST /v1/documents</code> — endpoint to upload a document for ingestion</p>
+<p><strong>Acceptance criteria:</strong>
+- Uploading a PDF and asking a question about its content returns a relevant answer with source citation
+- Top-5 retrieved chunks are relevant to the question (manual evaluation on 20 test questions)
+- Ingestion pipeline processes a 50-page PDF in &lt; 60 seconds</p>
+<p><strong>Reference:</strong> <a href="../../references/#ref-003">REF-003 Quivr</a> · <a href="../../architecture/application-services/#arc-l3-003a--rag-retriever">ARC-L3-003a</a></p>
+<hr />
+<h2 id="tsk-010-observability">TSK-010 — Observability</h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Status:</strong> Not started</li>
+</ul>
+<p><strong>What it is:</strong> Structured logging, distributed tracing, and cost alerting across all services. Ensures the platform is operationally visible and cost anomalies are caught before they become expensive surprises.</p>
+<p><strong>Inputs required:</strong> All previous tasks (instruments every component)</p>
+<p><strong>Outputs delivered:</strong>
+- Structured JSON logs from every service (request ID, tenant ID, latency, token count, bytes scanned)
+- GCP Cloud Monitoring dashboard with key metrics
+- Cost alert: Cloud Monitoring alarm when a tenant's daily BigQuery spend &gt; threshold
+- Token usage report: daily summary per tenant
+- SQL error rate alert: alarm when NL2SQL retry rate &gt; 20% over 1 hour</p>
+<p><strong>Acceptance criteria:</strong>
+- Every <code>/v1/chat</code> request produces a log entry with: latency breakdown, token count, SQL generated, bytes scanned, cache hit/miss
+- Cost alert fires within 5 minutes of threshold breach (tested with a large query)
+- Grafana / Cloud Monitoring dashboard shows all key signals in one view</p>
+<p><strong>Reference:</strong> <a href="../../architecture/overview/#layer-5--infrastructure--ops">ARC-L5-002</a> · <a href="../../specs/observability/">SPC-O-001</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

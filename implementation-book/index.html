@@ -1,0 +1,2330 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Architecture planner and SDD for the plug-and-play BI chatbot widget">
+      
+      
+        <meta name="author" content="AI Data Assistant Team">
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../architecture/overview/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>🗂 Implementation Playbook - AI Data Assistant — Architecture</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ai-data-assistant-implementation-playbook" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="AI Data Assistant — Architecture" class="md-header__button md-logo" aria-label="AI Data Assistant — Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Data Assistant — Architecture
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🗂 Implementation Playbook
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  🗂 Implementation Playbook
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../architecture/overview/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../specs/technical/" class="md-tabs__link">
+          
+  
+  
+  Technical Specs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../planning/design-decisions/" class="md-tabs__link">
+          
+  
+  
+  Planning
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AI Data Assistant — Architecture" class="md-nav__button md-logo" aria-label="AI Data Assistant — Architecture" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI Data Assistant — Architecture
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗂 Implementation Playbook
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗂 Implementation Playbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tags-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Tags Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-overview-arch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Overview #ARCH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stack-decisions-arch-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stack Decisions #ARCH #SPEC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture-5-layers-arch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Architecture — 5 Layers #ARCH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-flow-arch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Flow #ARCH
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Request Flow #ARCH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nl2sql-path-analytical-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NL2SQL path (analytical questions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rag-path-knowledge-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAG path (knowledge questions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-hit-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache hit path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-order-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build Order #BUILD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Build Order #BUILD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-0-foundation-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0 — Foundation #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-api-server-auth-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — API Server &amp; Auth #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-schema-registry-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Schema Registry #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-nl2sql-pipeline-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — NL2SQL Pipeline #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-streaming-widget-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Streaming &amp; Widget #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-rag-knowledge-base-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — RAG &amp; Knowledge Base #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-session-multi-turn-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Session &amp; Multi-turn #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-observability-hardening-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 7 — Observability &amp; Hardening #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#folder-structure-conv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Folder Structure #CONV
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coding-conventions-conv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coding Conventions #CONV
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Coding Conventions #CONV">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-safety-warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL safety #WARN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-tenancy-conv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-tenancy #CONV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bigquery-cost-control-warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BigQuery cost control #WARN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#claude-code-plugin-stack-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Code Plugin Stack #PLUGIN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Claude Code Plugin Stack #PLUGIN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mcp-servers-add-to-mcpjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Servers — add to .mcp.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skills-plugins-install-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills &amp; Plugins — install order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repomix-for-large-context-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repomix — for large context sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-architecture-decisions-log-arch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Architecture Decisions Log #ARCH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-risks-gotchas-warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Risks &amp; Gotchas #WARN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables #SPEC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo-open-decisions-todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TODO — Open Decisions #TODO
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview (5 Layers)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/gcp-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GCP Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/application-services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/storage-governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage & Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Specs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Technical Specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specs/technical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration & Runtime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specs/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specs/observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Planning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../planning/design-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Decisions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../planning/roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product References
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tags-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Tags Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-overview-arch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Overview #ARCH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stack-decisions-arch-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stack Decisions #ARCH #SPEC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture-5-layers-arch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Architecture — 5 Layers #ARCH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-flow-arch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Flow #ARCH
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Request Flow #ARCH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nl2sql-path-analytical-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NL2SQL path (analytical questions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rag-path-knowledge-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAG path (knowledge questions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-hit-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache hit path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-order-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build Order #BUILD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Build Order #BUILD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-0-foundation-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0 — Foundation #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-api-server-auth-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — API Server &amp; Auth #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-schema-registry-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Schema Registry #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-nl2sql-pipeline-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — NL2SQL Pipeline #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-streaming-widget-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Streaming &amp; Widget #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-rag-knowledge-base-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — RAG &amp; Knowledge Base #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-session-multi-turn-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Session &amp; Multi-turn #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-observability-hardening-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 7 — Observability &amp; Hardening #BUILD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#folder-structure-conv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Folder Structure #CONV
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coding-conventions-conv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coding Conventions #CONV
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Coding Conventions #CONV">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-safety-warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL safety #WARN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-tenancy-conv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-tenancy #CONV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bigquery-cost-control-warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BigQuery cost control #WARN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#claude-code-plugin-stack-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Code Plugin Stack #PLUGIN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Claude Code Plugin Stack #PLUGIN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mcp-servers-add-to-mcpjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Servers — add to .mcp.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skills-plugins-install-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills &amp; Plugins — install order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repomix-for-large-context-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repomix — for large context sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-architecture-decisions-log-arch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Architecture Decisions Log #ARCH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-risks-gotchas-warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Risks &amp; Gotchas #WARN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables #SPEC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo-open-decisions-todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TODO — Open Decisions #TODO
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="ai-data-assistant-implementation-playbook">AI Data Assistant — Implementation Playbook</h1>
+<blockquote>
+<p><strong>Source of truth for all AI code generation.</strong>
+Path: <code>docs/implementation-book.md</code> — drop this into Claude Code at session start.
+Contains: architecture decisions, build order, plugin stack, and coding conventions.</p>
+</blockquote>
+<hr />
+<h2 id="tags-reference">🏷️ Tags Reference</h2>
+<p>Use these tags to navigate or grep sections:</p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#ARCH</code></td>
+<td>Architecture decision</td>
+</tr>
+<tr>
+<td><code>#SPEC</code></td>
+<td>Technical specification</td>
+</tr>
+<tr>
+<td><code>#BUILD</code></td>
+<td>Implementation task / build step</td>
+</tr>
+<tr>
+<td><code>#PLUGIN</code></td>
+<td>Claude Code plugin or MCP server</td>
+</tr>
+<tr>
+<td><code>#CONV</code></td>
+<td>Coding convention — always follow</td>
+</tr>
+<tr>
+<td><code>#WARN</code></td>
+<td>Known risk or gotcha</td>
+</tr>
+<tr>
+<td><code>#TODO</code></td>
+<td>Not yet decided / needs discussion</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="project-overview-arch">Project Overview <code>#ARCH</code></h2>
+<p><strong>Product:</strong> Plug-and-play BI chatbot widget embedded via single <code>&lt;script&gt;</code> tag.
+<strong>Core capability:</strong> Natural language → SQL → answer (NL2SQL), plus RAG for knowledge questions.
+<strong>Pricing model:</strong> Serverless, $0 cost when idle. Clients pay per active usage.</p>
+<p><strong>Inspired by:</strong>
+- Vanna.ai → NL2SQL approach
+- Quivr → Knowledge base / RAG
+- Chatbase → Widget UX and embed mechanism</p>
+<hr />
+<h2 id="stack-decisions-arch-spec">Stack Decisions <code>#ARCH</code> <code>#SPEC</code></h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Widget embed</td>
+<td>Vanilla JS + Shadow DOM</td>
+<td>Zero dependencies, works in React/Vue/plain HTML</td>
+</tr>
+<tr>
+<td>API server</td>
+<td>FastAPI (Python 3.12)</td>
+<td>Async support, Pydantic validation, fast cold start</td>
+</tr>
+<tr>
+<td>Serverless runtime</td>
+<td>Google Cloud Run</td>
+<td>Auto-scale to zero, 20min idle shutdown</td>
+</tr>
+<tr>
+<td>AI orchestration</td>
+<td>Custom Python agent</td>
+<td>Full control over tool calling and routing logic</td>
+</tr>
+<tr>
+<td>NL2SQL</td>
+<td>Schema-aware prompting + Vanna pattern</td>
+<td>Proven approach, schema injection = accurate SQL</td>
+</tr>
+<tr>
+<td>Primary DB</td>
+<td>BigQuery</td>
+<td>Columnar, scalable, pay-per-scan analytics</td>
+</tr>
+<tr>
+<td>Operational DB</td>
+<td>Cloud SQL (PostgreSQL 15)</td>
+<td>Sessions, config, chat history</td>
+</tr>
+<tr>
+<td>Vector store</td>
+<td>Pgvector (on Cloud SQL)</td>
+<td>RAG embeddings, same DB = simpler infra</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>Redis (Cloud Memorystore)</td>
+<td>Query cache, session store, rate limiting</td>
+</tr>
+<tr>
+<td>Object storage</td>
+<td>Google Cloud Storage</td>
+<td>CSV uploads, PDFs, model artifacts</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>JWT (short-lived) + tenant-key</td>
+<td>Stateless, multi-tenant safe</td>
+</tr>
+<tr>
+<td>CI/CD</td>
+<td>GitHub Actions → Cloud Run</td>
+<td>Standard, well-documented</td>
+</tr>
+<tr>
+<td>Secrets</td>
+<td>Google Secret Manager</td>
+<td>Never in env vars or code</td>
+</tr>
+<tr>
+<td>Schema catalog</td>
+<td>Dataplex (or custom registry)</td>
+<td>NL2SQL context source, not DB probing</td>
+</tr>
+<tr>
+<td>AI models</td>
+<td>Vertex AI Gemini (primary), Claude API (fallback), Ollama (local dev)</td>
+<td>Cost optimization per environment</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="system-architecture-5-layers-arch">System Architecture — 5 Layers <code>#ARCH</code></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  LAYER 1 — CLIENT EMBED                             │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Widget Loader JS │ Chat Widget UI │ Config Attrs   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└────────────────────────┬────────────────────────────┘
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                         │ HTTPS + SSE
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>┌────────────────────────▼────────────────────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  LAYER 2 — API GATEWAY &amp; AUTH                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  API Gateway │ Auth Middleware │ Tenant Resolver    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└────────────────────────┬────────────────────────────┘
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                         │ validated request
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>┌────────────────────────▼────────────────────────────┐
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  LAYER 3 — AI CORE ENGINE                           │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Agent Orchestrator                                 │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│    ├── NL2SQL Pipeline                              │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│    ├── RAG Retriever                                │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│    └── Response Formatter                           │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└──────────┬─────────────────────────┬────────────────┘
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>           │ SQL query               │ vector search
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>┌──────────▼──────────┐   ┌─────────▼──────────────┐
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  LAYER 4 — DATA     │   │  LAYER 4 — DATA        │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  BigQuery (DWH)     │   │  Pgvector (embeddings) │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Schema Registry    │   │  Redis (cache)         │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  DB Connector       │   │  Cloud Storage (files) │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└─────────────────────┘   └────────────────────────┘
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  LAYER 5 — INFRA &amp; OPS                              │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Cloud Run │ Monitoring │ CI/CD │ Secret Manager   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└─────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="request-flow-arch">Request Flow <code>#ARCH</code></h2>
+<h3 id="nl2sql-path-analytical-questions">NL2SQL path (analytical questions)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>User question
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  → Widget UI (SSE stream open)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  → API Server (auth + rate limit check)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  → Agent Orchestrator (intent: data query)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  → Schema Registry (fetch table metadata)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  → NL2SQL Engine (inject schema + generate SQL)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  → Query Validator (safety check)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  → BigQuery (execute, return rows)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  → Response Formatter (rows → narrative + chart)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  → Stream back to Widget UI
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  → Save result to Redis cache (TTL 1hr)
+</code></pre></div>
+<h3 id="rag-path-knowledge-questions">RAG path (knowledge questions)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>User question
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  → Widget UI
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  → API Server
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  → Agent Orchestrator (intent: knowledge)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  → RAG Retriever (embed question → search Pgvector)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  → Top-K documents retrieved
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  → LLM generates answer with document context
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  → Stream back to Widget UI
+</code></pre></div>
+<h3 id="cache-hit-path">Cache hit path</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>User question
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  → API Server
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  → Redis cache hit
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  → Return immediately  ⚡ target &lt;50ms
+</code></pre></div>
+<hr />
+<h2 id="build-order-build">Build Order <code>#BUILD</code></h2>
+<p>Work through these phases in sequence. Each phase has clear inputs and outputs.</p>
+<h3 id="phase-0-foundation-build">Phase 0 — Foundation <code>#BUILD</code></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>0.1</code> Init repo structure (see Folder Structure below)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>0.2</code> Setup <code>CLAUDE.md</code> in repo root</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>0.3</code> Setup <code>.mcp.json</code> with BigQuery + PostgreSQL MCP servers</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>0.4</code> Setup Google Cloud project, enable APIs (BigQuery, Cloud Run, Secret Manager)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>0.5</code> Setup GitHub Actions skeleton (lint → test → deploy to Cloud Run)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>0.6</code> Install Claude Code plugins (MemClaw, security-sweep, backend-architect)</li>
+</ul>
+<p><strong>Output:</strong> Empty but wired repo. Cloud Run deploys a hello-world. CI passes.</p>
+<hr />
+<h3 id="phase-1-api-server-auth-build">Phase 1 — API Server &amp; Auth <code>#BUILD</code></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>1.1</code> FastAPI app skeleton with health check endpoint</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>1.2</code> Tenant-key validation middleware</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>1.3</code> JWT issue + verify logic</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>1.4</code> Tenant Resolver — maps tenant-id to DB credentials from Secret Manager</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>1.5</code> Rate limiter per tenant-key (Redis counter)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>1.6</code> Cloud Run deploy + environment variable wiring</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>1.7</code> Write tests for auth middleware</li>
+</ul>
+<p><strong>Output:</strong> <code>POST /chat</code> endpoint that authenticates requests. Rejects bad keys.</p>
+<hr />
+<h3 id="phase-2-schema-registry-build">Phase 2 — Schema Registry <code>#BUILD</code></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>2.1</code> Schema Registry data model (tenant_id, table_name, columns, descriptions)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>2.2</code> Schema ingestion script — reads BigQuery dataset metadata via MCP Toolbox</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>2.3</code> Schema cache layer (Redis, TTL 24hr)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>2.4</code> Schema Registry API — <code>GET /schema/{tenant_id}</code> for NL2SQL to consume</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>2.5</code> Write tests for schema fetch + cache behavior</li>
+</ul>
+<p><strong>Output:</strong> NL2SQL can call Schema Registry to get table context before generating SQL.</p>
+<hr />
+<h3 id="phase-3-nl2sql-pipeline-build">Phase 3 — NL2SQL Pipeline <code>#BUILD</code></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>3.1</code> Agent Orchestrator skeleton — intent classifier (SQL vs RAG vs hybrid)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>3.2</code> NL2SQL Engine — schema injection into prompt template</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>3.3</code> SQL generation with LLM (Gemini primary, Claude fallback)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>3.4</code> Query Validator — block <code>SELECT *</code>, injection patterns, unauthorized tables</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>3.5</code> BigQuery Connector — execute validated SQL, return results</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>3.6</code> Auto-retry on SQL error (re-prompt with error message, max 2 retries)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>3.7</code> Response Formatter — rows → narrative string</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>3.8</code> Redis query cache — hash(tenant_id + question) as key, TTL 1hr</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>3.9</code> Write tests for validator, retry logic, and cache behavior</li>
+</ul>
+<p><strong>Output:</strong> <code>POST /chat</code> with a data question returns a correct SQL-derived answer.</p>
+<hr />
+<h3 id="phase-4-streaming-widget-build">Phase 4 — Streaming &amp; Widget <code>#BUILD</code></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>4.1</code> SSE (Server-Sent Events) streaming endpoint on FastAPI</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>4.2</code> Widget Loader JS — single <code>&lt;script&gt;</code> tag, lazy iframe inject</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>4.3</code> Chat Widget UI — Shadow DOM, message bubbles, typing indicator</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>4.4</code> PostMessage bridge between iframe and parent window</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>4.5</code> Streaming token renderer in widget (append tokens as they arrive)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>4.6</code> Result Renderer — detect table/chart in response, render with Chart.js</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>4.7</code> Config via data attributes (<code>data-tenant-id</code>, <code>data-theme</code>, <code>data-lang</code>)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>4.8</code> Test embed in plain HTML, React app, and Vue app</li>
+</ul>
+<p><strong>Output:</strong> Working chatbot widget embeddable with one line. Answers stream in real-time.</p>
+<hr />
+<h3 id="phase-5-rag-knowledge-base-build">Phase 5 — RAG &amp; Knowledge Base <code>#BUILD</code></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>5.1</code> Embedding pipeline — PDF/text → chunks → embed → store in Pgvector</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>5.2</code> Document upload endpoint — <code>POST /knowledge/{tenant_id}/upload</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>5.3</code> RAG Retriever — embed question, cosine similarity search, top-5 chunks</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>5.4</code> Orchestrator routing — add RAG branch to intent classifier</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>5.5</code> Hybrid path — combine SQL result + RAG context in single answer</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>5.6</code> Write tests for embedding pipeline and retrieval accuracy</li>
+</ul>
+<p><strong>Output:</strong> Widget can answer both "show me revenue" (SQL) and "what is our refund policy" (RAG).</p>
+<hr />
+<h3 id="phase-6-session-multi-turn-build">Phase 6 — Session &amp; Multi-turn <code>#BUILD</code></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>6.1</code> Session Manager — Redis store with conversation history per session</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>6.2</code> Session TTL — 30 minutes idle, configurable per tenant</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>6.3</code> Inject last N messages as context into Orchestrator prompt</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>6.4</code> Handle follow-up questions ("compare with last month" without re-stating month)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>6.5</code> Session cleanup job — purge expired sessions</li>
+</ul>
+<p><strong>Output:</strong> Multi-turn conversations work correctly. AI remembers context within a session.</p>
+<hr />
+<h3 id="phase-7-observability-hardening-build">Phase 7 — Observability &amp; Hardening <code>#BUILD</code></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>7.1</code> Structured logging per request (tenant_id, latency, token_count, sql_error)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>7.2</code> Cost tracking per tenant per day (BigQuery bytes scanned + LLM tokens)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>7.3</code> Cost alert — Cloud Monitoring alert if tenant exceeds daily threshold</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>7.4</code> Security sweep with <code>security-sweep</code> plugin, fix all findings</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>7.5</code> Load test — simulate 100 concurrent widget sessions</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>7.6</code> Cold start optimization — target &lt;2s from idle</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>7.7</code> Final documentation with <code>documentation-generator</code> plugin</li>
+</ul>
+<p><strong>Output:</strong> Production-ready. Monitored, secured, documented.</p>
+<hr />
+<h2 id="folder-structure-conv">Folder Structure <code>#CONV</code></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── CLAUDE.md                    ← Claude Code reads this every session
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── .mcp.json                    ← MCP server config (BigQuery, Postgres, Redis)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>├── .github/workflows/           ← CI/CD pipelines
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>├── api/                         ← FastAPI application
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│   ├── main.py                  ← App entrypoint
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│   ├── routes/                  ← Endpoint definitions
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   │   ├── chat.py              ← POST /chat, SSE stream
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│   │   ├── knowledge.py         ← POST /knowledge/upload
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│   │   └── health.py            ← GET /health
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│   ├── middleware/
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│   │   ├── auth.py              ← Tenant-key + JWT validation
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│   │   ├── rate_limit.py        ← Redis-backed per-tenant limiting
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│   │   └── tenant.py            ← Tenant resolver
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│   └── models/                  ← Pydantic request/response models
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>├── agents/                      ← AI core engine
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│   ├── orchestrator.py          ← Intent routing (SQL vs RAG vs hybrid)
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│   ├── nl2sql/
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│   │   ├── engine.py            ← Schema injection + SQL generation
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>│   │   ├── validator.py         ← Pre-execution SQL safety check
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>│   │   └── prompts.py           ← Prompt templates
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>│   ├── rag/
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>│   │   ├── retriever.py         ← Pgvector similarity search
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>│   │   └── embedder.py          ← Text → embedding pipeline
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>│   └── formatter.py             ← Query results → narrative/chart hint
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>│
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>├── connectors/                  ← Database adapters
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>│   ├── bigquery.py              ← BigQuery execute + schema fetch
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>│   ├── postgres.py              ← Cloud SQL operations
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>│   ├── redis.py                 ← Cache + session + rate limit ops
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>│   └── schema_registry.py       ← Schema fetch + cache logic
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>│
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>├── widget/                      ← Frontend embed
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>│   ├── loader.js                ← Single script tag entry point
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>│   ├── widget.js                ← Shadow DOM chat UI
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>│   ├── renderer.js              ← Table + chart rendering
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>│   └── bridge.js                ← PostMessage iframe ↔ parent
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>│
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>├── scripts/                     ← Utility scripts
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>│   ├── ingest_schema.py         ← Populate Schema Registry from BigQuery
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>│   └── embed_documents.py       ← Upload docs to Pgvector
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>│
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>└── tests/
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>    ├── test_auth.py
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>    ├── test_nl2sql.py
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>    ├── test_validator.py
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>    ├── test_rag.py
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>    └── test_cache.py
+</code></pre></div>
+<hr />
+<h2 id="coding-conventions-conv">Coding Conventions <code>#CONV</code></h2>
+<h3 id="general">General</h3>
+<ul>
+<li>Python 3.12, strict type hints everywhere</li>
+<li>Pydantic v2 for all request/response models</li>
+<li>Async/await throughout — no blocking I/O in FastAPI routes</li>
+<li>All secrets via <code>google.cloud.secretmanager</code>, never in env vars or <code>.env</code> files</li>
+</ul>
+<h3 id="sql-safety-warn">SQL safety <code>#WARN</code></h3>
+<ul>
+<li><strong>NEVER</strong> pass raw user input directly to any SQL string</li>
+<li>All SQL must pass through <code>agents/nl2sql/validator.py</code> before execution</li>
+<li>Block patterns: <code>SELECT *</code>, <code>DROP</code>, <code>DELETE</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>--</code>, <code>;</code></li>
+<li>Whitelist only: tables in Schema Registry for that tenant</li>
+</ul>
+<h3 id="multi-tenancy-conv">Multi-tenancy <code>#CONV</code></h3>
+<ul>
+<li>Every DB query must include <code>tenant_id</code> scope</li>
+<li>Redis keys always prefixed: <code>{tenant_id}:{key_type}:{identifier}</code></li>
+<li>BigQuery queries scoped to tenant's Dataset only</li>
+<li>Log <code>tenant_id</code> in every log line</li>
+</ul>
+<h3 id="bigquery-cost-control-warn">BigQuery cost control <code>#WARN</code></h3>
+<ul>
+<li>Always use <code>LIMIT</code> clause — default 1000 rows max</li>
+<li>Always filter with <code>WHERE</code> on date partition columns when available</li>
+<li>Log bytes_processed per query for cost tracking</li>
+<li>Alert if single query exceeds 10GB scan</li>
+</ul>
+<h3 id="streaming">Streaming</h3>
+<ul>
+<li>All chat responses use SSE (<code>text/event-stream</code>)</li>
+<li>Token chunks sent as: <code>data: {"token": "...", "done": false}\n\n</code></li>
+<li>Final chunk: <code>data: {"token": "", "done": true, "metadata": {...}}\n\n</code></li>
+</ul>
+<h3 id="error-handling">Error handling</h3>
+<ul>
+<li>Never expose internal error details to widget client</li>
+<li>Always return structured error: <code>{"error": "human-readable", "code": "ERR_CODE"}</code></li>
+<li>SQL generation failure → graceful message, not stack trace</li>
+</ul>
+<hr />
+<h2 id="claude-code-plugin-stack-plugin">Claude Code Plugin Stack <code>#PLUGIN</code></h2>
+<h3 id="mcp-servers-add-to-mcpjson">MCP Servers — add to <code>.mcp.json</code></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">&quot;bigquery&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npx&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;-y&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@toolbox-sdk/server&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--prebuilt=bigquery&quot;</span><span class="p">],</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;BIGQUERY_PROJECT&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_PROJECT_ID&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">&quot;postgres&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npx&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;-y&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@toolbox-sdk/server&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--prebuilt=postgres&quot;</span><span class="p">],</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;POSTGRES_CONNECTION_STRING&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_CLOUD_SQL_URL&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nt">&quot;redis&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npx&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;-y&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;redis-mcp&quot;</span><span class="p">],</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;REDIS_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_REDIS_URL&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="nt">&quot;github&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npx&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;-y&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@github/github-mcp-server&quot;</span><span class="p">],</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;GITHUB_TOKEN&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_TOKEN&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="skills-plugins-install-order">Skills &amp; Plugins — install order</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Phase 0 — install before writing any code</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/plugin<span class="w"> </span>install<span class="w"> </span>memclaw@memclaw<span class="w">          </span><span class="c1"># persistent project memory</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>/plugin<span class="w"> </span>install<span class="w"> </span>backend-architect<span class="w">        </span><span class="c1"># API + DB design patterns</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>/plugin<span class="w"> </span>install<span class="w"> </span>security-sweep<span class="w">           </span><span class="c1"># OWASP + LLM Top 10 scanner</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Phase 3 — when building AI core</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>/plugin<span class="w"> </span>install<span class="w"> </span>test-writer-fixer<span class="w">        </span><span class="c1"># auto-generate pytest tests</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>/plugin<span class="w"> </span>install<span class="w"> </span>mcp-builder<span class="w">              </span><span class="c1"># if custom MCP needed for Dataplex</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Phase 7 — final hardening</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>/plugin<span class="w"> </span>install<span class="w"> </span>documentation-generator<span class="w">  </span><span class="c1"># API docs + README</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>/plugin<span class="w"> </span>install<span class="w"> </span>maestro-orchestrate<span class="w">      </span><span class="c1"># multi-agent for parallel integration</span>
+</code></pre></div>
+<h3 id="repomix-for-large-context-sessions">Repomix — for large context sessions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Pack entire repo into single AI-readable file</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>npx<span class="w"> </span>repomix<span class="w"> </span>--output<span class="w"> </span>repomix-output.txt
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Then in Claude Code:</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># &quot;Here is the full codebase: [paste repomix-output.txt]&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="key-architecture-decisions-log-arch">Key Architecture Decisions Log <code>#ARCH</code></h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Choice</th>
+<th>Reason</th>
+<th>Alternative rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Widget isolation</td>
+<td>Shadow DOM</td>
+<td>CSS cannot bleed in/out</td>
+<td>iframe-only: too heavy, postMessage overhead</td>
+</tr>
+<tr>
+<td>NL2SQL context</td>
+<td>Schema Registry (cached)</td>
+<td>No live DB probing = faster + safer</td>
+<td>Probe DB directly: slow, security risk</td>
+</tr>
+<tr>
+<td>Cache strategy</td>
+<td>Redis in front of BigQuery</td>
+<td>BQ cache only works for identical queries</td>
+<td>BQ cache only: misses paraphrased questions</td>
+</tr>
+<tr>
+<td>Multi-tenant isolation</td>
+<td>Dataset-level separation + RLS</td>
+<td>Defense in depth</td>
+<td>Schema-level only: single point of failure</td>
+</tr>
+<tr>
+<td>SQL execution</td>
+<td>Validated + whitelist-only</td>
+<td>BigQuery charges per scan; bad query = $</td>
+<td>Trust LLM output: injection + cost risk</td>
+</tr>
+<tr>
+<td>Streaming</td>
+<td>SSE over WebSocket</td>
+<td>Simpler, HTTP-native, works through CDN</td>
+<td>WebSocket: overkill for one-way token stream</td>
+</tr>
+<tr>
+<td>Model fallback</td>
+<td>Gemini → Claude → local</td>
+<td>Cost optimize: GCP-native first</td>
+<td>Single model: no resilience</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>JWT (15min) + refresh</td>
+<td>Stateless, scales well</td>
+<td>Session cookies: stateful, harder to scale</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="known-risks-gotchas-warn">Known Risks &amp; Gotchas <code>#WARN</code></h2>
+<ol>
+<li>
+<p><strong>BigQuery cold scan cost</strong> — A <code>SELECT *</code> on a 1TB table = expensive. Query Validator is non-negotiable.</p>
+</li>
+<li>
+<p><strong>Cloud Run cold start</strong> — First request after 20min idle can be 2-3s. Mitigate with min-instances=1 for paid tiers, or warm-ping every 15min for free tier.</p>
+</li>
+<li>
+<p><strong>NL2SQL hallucination</strong> — LLM may generate plausible but wrong SQL. Always show user the SQL that was run (transparency). Add "explain mode" toggle.</p>
+</li>
+<li>
+<p><strong>Pgvector performance</strong> — Cosine similarity on 1M+ vectors gets slow without HNSW index. Set up index from day one, not after.</p>
+</li>
+<li>
+<p><strong>Multi-tenant Redis key collision</strong> — Always prefix keys with <code>{tenant_id}:</code>. A missing prefix exposes one tenant's cache to another.</p>
+</li>
+<li>
+<p><strong>Shadow DOM + third-party scripts</strong> — Some host pages run Content Security Policy that blocks inline scripts. Widget must handle CSP gracefully and surface a clear error.</p>
+</li>
+<li>
+<p><strong>SSE and load balancers</strong> — Some reverse proxies buffer SSE. Set <code>X-Accel-Buffering: no</code> header on streaming responses.</p>
+</li>
+<li>
+<p><strong>Schema Registry staleness</strong> — If client changes their DB schema, Registry goes stale. Implement webhook or polling to detect schema changes.</p>
+</li>
+</ol>
+<hr />
+<h2 id="environment-variables-spec">Environment Variables <code>#SPEC</code></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Auth</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">JWT_SECRET</span><span class="o">=</span><span class="w">                    </span><span class="c1"># from Secret Manager</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">JWT_EXPIRY_MINUTES</span><span class="o">=</span><span class="m">15</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># BigQuery</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">BIGQUERY_PROJECT_ID</span><span class="o">=</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nv">BIGQUERY_LOCATION</span><span class="o">=</span>asia-southeast1
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Cloud SQL</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nv">CLOUD_SQL_CONNECTION_NAME</span><span class="o">=</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nv">POSTGRES_DB</span><span class="o">=</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nv">POSTGRES_USER</span><span class="o">=</span><span class="w">                 </span><span class="c1"># from Secret Manager</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span><span class="w">             </span><span class="c1"># from Secret Manager</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Redis</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="nv">REDIS_URL</span><span class="o">=</span><span class="w">                     </span><span class="c1"># from Secret Manager</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># AI Models</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="nv">VERTEX_PROJECT_ID</span><span class="o">=</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="nv">VERTEX_LOCATION</span><span class="o">=</span>asia-southeast1
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span><span class="w">             </span><span class="c1"># from Secret Manager (fallback)</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># App config</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="nv">MAX_QUERY_ROWS</span><span class="o">=</span><span class="m">1000</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="nv">MAX_BIGQUERY_SCAN_GB</span><span class="o">=</span><span class="m">10</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="nv">CACHE_TTL_QUERY</span><span class="o">=</span><span class="m">3600</span><span class="w">           </span><span class="c1"># 1 hour</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="nv">CACHE_TTL_SESSION</span><span class="o">=</span><span class="m">1800</span><span class="w">         </span><span class="c1"># 30 minutes</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="nv">CACHE_TTL_SCHEMA</span><span class="o">=</span><span class="m">86400</span><span class="w">         </span><span class="c1"># 24 hours</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="nv">IDLE_SHUTDOWN_MINUTES</span><span class="o">=</span><span class="m">20</span>
+</code></pre></div>
+<hr />
+<h2 id="todo-open-decisions-todo">TODO — Open Decisions <code>#TODO</code></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Pricing model per tenant — flat monthly vs pay-per-query?</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Widget theming system — how many variables exposed to client?</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Multi-language support — Bahasa Indonesia + English from day one?</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Dataplex vs custom Schema Registry — depends on GCP commitment level</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Ollama local model for dev — which model? (Llama 3.1, Mistral, CodeLlama?)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Data ingestion layer — Cloud Functions for ETL from client systems?</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Admin dashboard for tenants — self-serve schema upload + API key management?</li>
+</ul>
+<hr />
+<p><em>Last updated: April 2026 — generated from design session context.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
